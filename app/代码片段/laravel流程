@@ -2,36 +2,40 @@ Laravel项目流程
 1.项目需求 xmind画思维导图
 
 2.检查扩展是否开启  phpinfo();打印一下
-PHP >= 7.0.0
-OpenSSL PHP Extension
-PDO PHP Extension
-Mbstring PHP Extension
-Tokenizer PHP Extension
-XML PHP Extension
+    PHP >= 7.0.0
+    OpenSSL PHP Extension
+    PDO PHP Extension
+    Mbstring PHP Extension
+    Tokenizer PHP Extension
+    XML PHP Extension
 
 3.下载 composer配置中国镜像并 下载laravel 
-   composer create-project --prefer-dist laravel/laravel blog
+    composer create-project --prefer-dist laravel/laravel blog
 
 4.配置laravel 
-连接数据库、输出调试、修改时区 'timezone' => 'PRC'  'locale' => 'zh', (当地语言)
-apache2开启重写、修改文件权限: storage vendor
+    连接数据库、输出调试、修改时区 'timezone' => 'PRC'  'locale' => 'zh', (当地语言)
+    apache2开启重写、修改文件权限: storage vendor
 
 5.数据库设计（建模 和使用laravel migrations数据库迁移）
-  public function up(){
-    Schema::create('users', function (Blueprint $table) {
-    $table->increments('id');
-    $table->string('name');
-    $table->string('email')->unique();
-    $table->string('password');
-    $table->rememberToken();
-    $table->timestamps();}
- );}
+    public function up(){
+      Schema::create('users', function (Blueprint $table) {
+      $table->increments('id');
+      $table->string('name');
+      $table->string('email')->unique();
+      $table->string('password');
+      $table->rememberToken();
+      $table->timestamps();}
+  );}
 
 6.建立git仓库同步到github上
-git remote add origin https://github.com/piaoliuxiaoqiang/blog.git  本地https关联
-git push -u origin master  推送本地分支到远程
-git push origin master 然后只要本地提交了 就可以直接使用了
+      git remote add origin https://github.com/piaoliuxiaoqiang/blog.git  本地https关联
+      git push -u origin master  推送本地分支到远程
+      git push origin master 然后只要本地提交了 就可以直接使用了
 
 7.功能模块开发（核心到周边）
+      首先创建首个模块的路由 例文章模块的 列表-详情-添加（保存）-修改（更新）-删除
+      然后创建渲染模板
+      
+
 
 

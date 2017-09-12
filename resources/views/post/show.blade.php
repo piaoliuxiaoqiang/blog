@@ -29,7 +29,7 @@
 <script type="text/javascript" src="{{asset('qianduan/js/main.min.js?t=1')}}"></script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 </head>
-<body>
+<body>s
     <header class="header">
     <div class="header-container">
         <div class="header-div pull-left">
@@ -78,36 +78,52 @@
                     <a href="#doc-oc-demo1" class="font am-show-sm-only" data-am-offcanvas>&#xe68b;</a>
                     <span>公司新闻</span>
                 </div>
+                <div>
+                <p>日期：2017年9月12日 来源：<a href="#"><font color="blue">张三</font></a></p>
+                </div>
+
+                <div class="com-nav-content">
+                    <span>大冶市云阿拉丁科技有限公司创建于2015年1月5日，总部位于青铜故里——大冶市。公司致力于帮助传统行业实现在互联网时代</span>
+                </div>
+
+              <button class="btn btn-primary" type="button">
+                赞 <span class="badge">5</span>
+              </button>
+                <div class="com-info-page">
+                    <a href="#" class="no">上一篇</a><a href="#">下一篇</a>
+                </div>
+                <ul class="media-list">
+                    <li class="media">
+                        <div class="media-left">
+                        <a href="#">
+                                    <img class="media-object" src="{{asset('qianduan/images/64.png')}}" alt="...">
+                        </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">王五</h4>
+                                这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里
+                                是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论
+                                内容这里是评论内容这里是评论内容
+                        </div>
+                    </li>
+                </ul>
+               
+                <form action="form_action.asp" method="get">
+                    <label>评论</label>
+                    <textarea class="form-control" rows="3"></textarea>
+                    <p></P>
+                     <button type="submit" class="btn btn-default pull-right">提交</button>
+                </form>
                 
-                <div class="new-list">
-                    <ul>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                    </ul>
-                </div>
-                <div class="page-list">
-                    <a href="#"><<</a>
-                    <a href="#"><</a>
-                    <a href="#" class="num">1</a>
-                    <a href="#" class="num">2</a>
-                    <a href="#" class="num">3</a>
-                    <a href="#" class="on">4</a>
-                    <a href="#" class="num">5</a>
-                    <a href="#" class="num">6</a>
-                    <a href="#">></a>
-                    <a href="#">>></a>
-                </div>
+                
+                    
+                
             </div>
         </div>
     </div>
+
+  
+
     <div id="doc-oc-demo1" class="am-offcanvas">
         <div class="am-offcanvas-bar">
             <div class="am-offcanvas-content com-nav-left com-nav-left1">

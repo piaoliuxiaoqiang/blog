@@ -58,6 +58,7 @@
             <ul class="header-nav am-collapse">
                 <li class="on"><a href="{{url('/')}}">首页</a></li>
                 <li><a href="{{url('posts')}}">新闻动态</a></li>
+                <li><a href="{{url('create')}}">添加文章</a></li>
             </ul>
             <div class="header-serch  am-hide-md-down">
                 <input type="text" name="name" value="" />

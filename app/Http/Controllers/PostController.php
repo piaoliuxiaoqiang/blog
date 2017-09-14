@@ -16,7 +16,7 @@ class PostController extends Controller
     }
     //增加文章逻辑
     public function create(){
-
+        return view("post.create");
     }
 
     public function store(){

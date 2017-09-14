@@ -19,12 +19,16 @@ Laravel项目流程
 5.数据库设计（建模 和使用laravel migrations数据库迁移）
     public function up(){
       Schema::create('users', function (Blueprint $table) {
-      $table->increments('id');
-      $table->string('name');
+      $table->increments('id');   //自增ID
+      $table->string('name');     //字符创字段，string('name'，100) 第二个参数是长度限制
       $table->string('email')->unique();
+      $table->text('content');    //text是没有长度的
       $table->string('password');
-      $table->rememberToken();
-      $table->timestamps();}
+      $table->integer('age')->nullable();     //int 型 可空
+      $table->boolean('active')->default(1);  //布尔值 默认为1及为真
+      $table->integer('role_id')->unsigned(); //int 无符号 
+      $table->rememberToken();   //实现登录记住我功能
+      $table->timestamps();}     //创建laravel维护时间字段
   );}
 
 6.建立git仓库同步到github上
@@ -35,6 +39,14 @@ Laravel项目流程
 7.功能模块开发（核心到周边）
       首先创建首个模块的路由 例文章模块的 列表-详情-添加（保存）-修改（更新）-删除
       然后创建渲染模板
+
+8.migrations数据库创建数据 填充数据
+     表明posts //建议使用复数形式，同时可以路由模型绑定
+     外键user_id //名词+下划线ID  比如users表的主键为ID
+     时间 created_at/updated_at
+     php artisan make:migration create_posts(表名)_table  //创建migration表 并且设计表字段
+     php artisan migrate //执行migration创建表字段
+
 
 
 

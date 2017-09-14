@@ -19,7 +19,7 @@ Route::get('/posts','PostController@index');
 //文章详情页面 绑定模型posts
 Route::get('/posts/{post}','PostController@show');
 //文章创建页面
-Route::get('/posts/create','PostController@create');
+Route::get('/create','PostController@create');
 Route::post('/posts','PostController@store');
 //文章编辑修改页面
 Route::get('/posts/{post}/edit','PostController@edit');

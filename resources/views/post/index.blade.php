@@ -23,28 +23,15 @@
                 
                 <div class="new-list">
                     <ul>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
-                        <li><a href="./new_info.html"><span>创变2012—走进新成立的灯具国内业务本部</span><em>2017-4-11</em></a></li>
+                    @foreach($posts as $post)
+                        
+                    <li><a href="{{url('#')}}"><span>{{$post->title}}</span><em>{{$post->created_at->toDateString()}}</em></a></li>
+                    <li>{{str_limit($post->content,"100","...")}}</li>
+                    @endforeach
                     </ul>
                 </div>
                 <div class="page-list">
-                    <a href="#"><<</a>
-                    <a href="#"><</a>
-                    <a href="#" class="num">1</a>
-                    <a href="#" class="num">2</a>
-                    <a href="#" class="num">3</a>
-                    <a href="#" class="on">4</a>
-                    <a href="#" class="num">5</a>
-                    <a href="#" class="num">6</a>
-                    <a href="#">></a>
+                 
                     <a href="#">>></a>
                 </div>
             </div>

@@ -40,12 +40,32 @@ Laravel项目流程
       首先创建首个模块的路由 例文章模块的 列表-详情-添加（保存）-修改（更新）-删除
       然后创建渲染模板
 
-8.migrations数据库创建数据 填充数据
+8.单个模块开发--migrations数据库创建数据 填充数据
      表明posts //建议使用复数形式，同时可以路由模型绑定
      外键user_id //名词+下划线ID  比如users表的主键为ID
      时间 created_at/updated_at
      php artisan make:migration create_posts(表名)_table  //创建migration表 并且设计表字段
      php artisan migrate //执行migration创建表字段
+
+9.单个模块开发--功能开发
+     创建模块路由，创建控制器，创建模型文件 
+    控制和模板传递数据建议使用compact（）函数
+    例： return view(‘student’,[‘students’=>”$students”]);等价于
+     return view(‘student’，compact(‘students’));
+     同时如果有其他参数需要传递 如$posts
+     return view(‘student’,compact(‘students’,’posts’))
+
+10,注意时间转换格式 在模板里面做 毕竟是一个视图问题
+    laravel的时间是引用的carbon库  及 created_at 取出来的数据是carbon的对象 例子
+    $post->created_at->toDateString()
+     
+11，数据填充 字符截断  分页
+    数据填充  首先进入database/factories/UserFactory.php 创建一个针对某个模型的工厂类 创建填充数据的格式
+             然后进入php artisan thinker 中 factroy(App\Post::class,"条数")->create()
+    字符截断  {{str_limit($post->content,"100","...")}}  //参数1 显示的内容 参数2 截取长度 参数三 超出显示的内容
+    分页     首先在模型中取数据 $posts=Post::orderBy('created_at','desc')->get(); 把get 换成paginate（5）
+            显示时候 用{{$posts->links()}}
+
 
 
 

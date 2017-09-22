@@ -20,7 +20,7 @@ post请求需要验证csrf,所以要在表单里 加个隐藏域
 
 6.分页
  {{$students->render()}}
-
+ {{$students->links()}}
 7.修改是的数据保存
   <input type="text"  class="form-control" name="student[name]" 
          value="{{old('student')['name']?old('student')['name']:$student->name}}"

@@ -1,0 +1,658 @@
+路由 请求类型 get post put patch delete
+        //基本路由
+        Route::post('haha',function (){return "post路由";});
+
+        //多请求路由
+        Route::match(['get', 'post'], 'duo', function () {return '我是多请求';});
+        Route::any('quanbu',function(){return "我也多请求路由";});
+
+        //参数路由 有时候我们必须截取URL中的片段 如需要在URL中捕获用户参数
+        Route::get('yonghu/{a}',function($a){return "必选"."$a";});  
+        Route::get('yonghu/{a?}',function($a=null){return "默认可选"."$a";});
+        Route::get('yonghu/{id}/{a?}',function($a=null){return ""."$a";})
+        ->where({[‘id’=>’[0-9]+’,’name’=>’[A-Za-z]+’]}); //规则验证
+
+        //路由别名 优点在控制器路由模板中用route（）生成别名对应的URL
+        Route::get('user/profile', function () {return "命名路由".route('profile');
+        })->name('profile');
+        //同上面方法一样 都是路由的别名 
+        Route::get('user/bbb', ['as'=>'aaa',function () {return "命名路由".route('aaa');}]);
+
+        //路由群组 许多路由有公共的需求 url区段 中间件 前缀  添加前缀例：
+        Route::group([‘prefix’=>’mmm’],function(){});
+
+        //路由中输出视图 
+        Route::get('/', function () {return view('welcome');});
+
+        //put路由
+        Route::put('/', function () {return view('welcome');});
+        <from action=“/post” method=”POST”>
+        <input type=”hidden” name=”_method” value=”PUT” />
+        //{{method_field(‘PUT’)}} //隐藏才能命中PUT路由
+        </from>
+
+
+
+控制器
+        //新建一个控制器
+        namespace App\Http\Controllers;
+        use App\Member;
+        class CeShi extends Controller{
+            public function show (){
+                //输出一个模型的方法
+                echo Member::show();
+                //输出一个视图
+                return view('ceshi/cehi',['name'=>'大哥','age'=>18]);}};
+        //路由关联控制器  只需要在路由文件中加入
+
+        Route::get ('aaa',['uses'=>'CeShi@show'，as=>’别名1’])；或
+
+        Route::get ('wwww','CeShi@show')->name(‘别名2’);
+
+        1.视图
+        .blade.php文件才能输出变量
+
+        2.模型
+        //新建一个模型文件
+        <?php
+        namespace App;
+        use Illuminate\Database\Eloquent\Model;
+        class Member extends Model{
+            public static function show(){
+            return "第一个模型文件";
+        }}
+
+
+数据库操作 连接数据库 在config/database.php 中设置 在.env中修改
+        1DB Facade
+        DB facade  Use Illuminate\Support\Facades\DB;
+        DB：：insert(‘insert into student(name,age) values(?,?),[.xiao‘’,18]’);
+        DB：：update(sql语句);
+        DB：：select()
+        DB：：delete()
+
+        2.查询构造器   Use Illuminate\Support\Facades\DB;
+        增
+        DB::table('student')->insert(['name' => 'wwww','age' => 18]);
+        //得到自增ID
+        DB::table('student')->insertGetId(['name'=>"刘老六",'age'=>'888']);
+        修改以自增、自减
+        DB::table('student')->where('id',8)->update(['age'=>30]);
+        DB::table('student')->increment(‘age’,3); //自增3，默认1
+        DB::table('student')->decrment(‘age’,3); //自减3，默认1
+        删
+        DB::table('student')->where('id',’>=’,8)->delete(['age'=>30]);
+        DB::table('student')->truncate(); //删除表
+        查
+        DB::table('student')->get()->ordeBy(‘id’,’desc’); 
+        DB::table('student')->first(); 
+        //多条件查询
+        DB::table('student')->whereRaw(‘id>=? and >=?,[1001,18]’)->get(); 
+        DB::table('student')->pluck(‘name’);  //返回指定字段
+        DB::table('student')->lists(‘name’，‘id’); //返回指定字段 指定ID下标
+        DB::table('student')->select(‘id’,’name’)->get(); 
+        DB::table('student')->chunk(2,function ($students){
+                var_dump($students);
+        }) //分段查询 及每次查询2个数据
+
+        DB::table('student')->count();  //统计几条数据
+        DB::table('student')->max(‘age’); //age字段中最大的
+        DB::table('student')->min(‘age’);
+        DB::table('student')->avg(‘age’);
+        DB::table('student')->sun(‘age’);
+
+
+Eloquent ORM 每个表都有一个与之相对应的模型
+
+            //新建一个基础模型
+            namespace App;
+            use Illuminate\Database\Eloquent\Model;  //引入模型文件
+
+            class Student extends Model{
+            protected $table='student';    //指定表明
+            protected $primarKey='id';    //指定主键为ID
+            Public $timestamps=true;    //开启自动维护时间戳 默认开启
+            Protected function getDateFormat(){reurn time();}//时间戳格式
+            Protected function asDateTime($val){return $val} //输出时间为时间戳格式
+            Protected $fillable=[‘name’,’age’];//开启可以批量赋值添加的字段
+            Protected $guarded=[‘name’,’age’];//不允许批量赋值的字段}
+
+            //在控制器中使用模型
+            首先控制器中必须引入
+            use App\Student;                        //引入相关模型
+
+            查
+            $stunts= Student::all();                 //查询 表的所有记录返回一个集合
+            $stunt= Student::find(1001);     //使用主键查找ID为1001的模型对象数据
+            $stunt= Student::findOrFail()(1001);  //根据主键查找，如无则报错
+            //查询构造器在模型中的使用
+            $stunts= Student::get();                 //查询 表的所有记录返回一个集合
+            //查询ID大于1001并且取得按照年龄排序的第一条数据
+            $stunt= Student::where(‘id’,’>’,’1001’)->orderBy(‘age’,’desc’)->first();
+            同理其他构造器函数也能用。
+
+//orm新增，自定义时间戳，以及批量赋值
+            1.控制器中使用模型新增数据 调用save（）自动维护update_at 与created_at字段，如需关闭自动维护 请在模型中处理（如上）
+            $student=new Student();
+            $student->name="xiaoqiang";
+            $student->age=18;
+            $boll=$student->save(); //保存数据 
+
+            2.使用模型的creat方法新增数据 (需要在模型中开启批量添加数据)
+            Student::creat([‘name’=>’xiao’,’age’=>18]);
+
+            3.以属性查找用户若无则新增用户
+            Student::firstOrCreat([‘name’=>’xiao’,’age’=>18]);
+
+            4.以属性查找用户若无则需要手动保存
+            $stunted=Student::firstOrNew([‘name’=>’xiao’,’age’=>18]);
+            $stunted->save(); //手动保存
+
+            修改 
+            1通过模型更新数据
+            $student=Student::find(1021);
+            $student->name=’hello’;
+            $student->save();
+
+            2.结合查询语句批量修改
+            Student::where(‘id’,’>’,1019)->update([‘age’=>41]);
+
+
+
+
+
+            删除
+            1.通过模型删除
+            $student=Student::find(1); $student->delecet();
+            2.通过主键删除
+            Student::destroy(1018,1019); //删除1018，1019的数据
+            3.指定条件删除
+            Student::where(‘id’,’>’,’5’)->delecet();
+
+
+
+Bladem模板引擎
+                1模板继承
+                @extends(‘继承模板的路劲’)
+                //重写某个片段，例如头部
+                @section（‘header’）
+                @parent  //引入父模板中的内容
+                重写的内容片段
+                @shop
+                2.基础语法以及include使用
+                //模板中输出变量  {{$name }} 
+                //调用php代码 例子
+                {{isset($name)?$name:’不存在’}}
+                在末班中有简语法 {{$name or ‘不存在’}}
+                //原样输出  {{@$name }} 加个@符号 就可以不解析原样输出
+                //模板中的注释 {{-- 模板注释浏览器中无法看到 --}}
+                //引入子视图include使用  @include(‘子视图的路径’)
+                什么叫子视图
+                3.流程控制
+                //if语句
+                @if(in_array($name,$arr))    True    @else    False    @endif
+                //unless语句  相当于IF 的取反 @unless()   输出内容   @endunless
+                //for语句 @for($i=0,$i>10,$i++) <p>{{$i}}</p>  @endfor
+                //foreach语句 
+                @foreach($students as $stent)
+                <p>{{$stent->name}}</p>
+                @endforeach
+                //foreach语句变种 forelse语句
+                @forelse($students as $stent)
+                <p>{{$stent->name}}</p>
+                @empty
+                    数据不存在时输出
+                @endforeach
+                4.模板中的url 
+                例子有路由Route(‘url’,’Stunten@show’)->name(‘hahaha’);
+                //url()函数 是通过路由名称生成url           url(‘url’);
+                //action()函数 通过控制器和方法名生成URL  action(‘Stunten@show’’);
+                //route()函数 通过路由别名生成URL         route(‘hahaha’);
+
+
+
+Controller介绍
+1.Controller之 Request(请求)
+                请求里面存放了$_GET,$_POST,$_COOKIE,$_FILES,$_SERVERD等数据
+                首先在控制器中 use Illuminate\Http\Request; 
+                例如请求的URL是 www.xxx.com/student/request?name=sean$age=18
+                Public function request1(Request,$request){
+                //1.取值
+                $request->input(‘name’);   //取特定值
+                $request->input(‘age’,’男’); // 取特定值 如无，返回后面默认值
+                If($request->has(‘’name)){  //判断是否参数存在
+                    echo $request->input(‘name’);
+                    }else{echo “该参数不存在”}
+                $request->all(); //取得所有数据
+                //2.判断请求类型
+                $request->method();  //判断当前请求类型  如现在请求类型为GET
+                $request->isMethod(‘GET’); //判断指定类型  是否是GET请求
+                $request->ajax();           //判断是否是AJAX请求
+                $request->is(‘student/*’);   //判断是在这个规则下
+                $request->url();}           //返回当前url
+
+
+2.Controller之Session(会话控制 需路由开启session)
+                Route::group(['middleware'=>['web']],function(){
+                Route::any('session1','Student@session1');
+                Route::any('session2','Student@session2');
+                });
+                支持Memcached,Redis,数据库后端驱动，默认为file 配置文件在config/session.php中，使用有三种方式：
+                //HTTP request类的session()方法
+                    //session1中放入key1的值
+                Public function session1 (Request $request){
+                $request->session()->put(‘key1’,’value’)}}
+
+                Public function session2 (Request $request){
+                    $request->session()->get(‘key1’} //取出key1的值}
+                //session()辅助函数
+                session->put(‘key1’,’value’);
+                session->get(‘key1’);
+
+                //session() facade
+                Session::->put(‘key1’,’value’);
+                Session::->get(‘key1’);
+
+                下面用第三种方法演示一下：
+                Session::get(‘key1’，“默认值”); //如果没有key4 返回默认值
+                Session::push(‘key2’，“值1”)；//把数据存到session数组中
+                Session::get(‘key2’，“默认值”)；//取出的是一个数组
+
+                Session::pull(‘key1’，“默认值”); //从session 中取出数据，取出后删除
+                Session::all(); //取出所有数据
+
+                If(Session::has(‘key’)){  //判断session中某个key  是否有值
+                $res=Session::all();
+                }else{echo “不存在值”}；
+
+                //接受后删除session中的某个key
+                Session::forget(‘key1’);
+
+                //接收后删除所有的session信息
+                Session::flush‘key1’);
+
+                //暂存，及第一次访问存在，第二次不存在
+                Session::flash(‘key1’,’值1’);
+
+
+Controller之 Response(响应)
+
+                响应的常见数类型：字符串，视图，JSON，重定向
+                Public function response(){
+                $data=[‘err’=0,’arr’=1];
+                Return response->json($data)} //返回一个json
+                Pulic function response(){
+                方法1 重定向到路由
+                return redirect(‘session2’);//重定向到session2路由
+                /重定向到session2中，并且传到键为message的一次性数据
+                return redirect(‘session2’)->with(‘message’,’我是快闪数据’)}
+                在session中直接用Session：：get(‘message’);获取
+                方法2 重定向到控制器@方法
+                return redirect(‘Student@session2’)->with(‘message’,’快闪据’)
+                方法3 重定向到路由别名
+                return redirect(‘别名’)->with(‘message’,’快闪据’)
+                4 返回上一个页面
+                return redirect(‘’)->back(‘)
+
+
+
+
+Controller之 Middleware(中间件)
+
+
+                http中间件为过滤进入http的请求提供了一套便利机制
+                例：如果用户没有经过验证，中间件将用户重定向到登录页面，如通过则进入下一个操作页面，cors中间件可以用于为离开站点的响应添加合适的头（跨域）
+                所有中间件位于 app/Http/Middleware目录
+                例：有一个活动，在指定日期后开始，如果活动没开始，只能访问宣传页
+                新建中间件 Activity
+                namespace App\Http\Middleware;
+                use Closure; //
+                class Activity {
+                public function handle($request, Closure $next){
+                if (time()<strtotime("2017-07-22")) {
+                return redirect('activity0');}
+                return $next($request);}}
+
+
+
+
+Laravel表单
+                1.静态资源管理 {{asset("")}}
+                <a href="{{url('student')}}" class="list-group-item 
+                默认选中 如果url是/student则默认选中 否则不选{{Request::getPathInfo()== '/student' ? 'active' : ''}}">学生列表</a>
+
+                2.表单列表以及分页实现
+                public function show(){
+                    $students= StudentModel::paginate(5); //分页实现函数
+                    return view('student.index',['students'=>$students]);}
+                模板中调用实现分页
+                <ul class="pagination pull-right">{{$students->render()}}</ul>
+
+                3.新增操作和验证
+                laravel 默认开启csrf验证，post请求需要验证csrf,所以要在表单里 加个隐藏域 
+                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                不然就会报错：TokenMismatchException in VerifyCsrfToken.php line 68: 
+                或者视图页面表单中添加 {{csrf_field()}} 会生成一个隐藏的表单
+
+                laravel54默认开启csrf web中间件从laravel 5.2.27版本以后默认全局加载，
+                不需要自己手动载入，如果自己手动重复载入，有可能会导致session无法加载的情况(即 ----- message页面获取不到闪存值)
+
+                控制器中：需要引入 use Illuminate\Http\Request;
+                public function create(Request $request){
+                if($request->isMethod('POST')){
+                //1 控制器验证 备注:attribute相当于于占位符，无没有则只显示‘必填’
+                    $this->validate($request,[
+                    'student.name'=>'required|min:2|max:12',
+                    'student.age'=>'required|integer',
+                    'student.sex'=>'required|integer',],
+                    ['required'=>":attribute 必填",
+                    'min'=>':attribute 不能小于2个字符',
+                    'man'=>':attribute 不能大于12个字符',],
+                    ['student.name'=>"学生姓名",
+                    'student.age'=>"学生年龄",
+                    'student.sex'=>"学生性别", ] );
+                    //2.validate类验证 \Validator:类是全局类
+                    $validator=\Validator::make($request->input(),[
+                    'student.name'=>'required|min:2|max:12',
+                    'student.age'=>'required|integer',
+                    'student.sex'=>'required|integer',],
+                    ['required'=>":attribute 必填",
+                    'min'=>':attribute 不能小于2个字符',
+                    'man'=>':attribute 不能大于12个字符',
+                    'integer'=>'必须为整数',],
+                    ['student.name'=>"学生姓名",
+                    'student.age'=>"学生年龄",
+                    'student.sex'=>"学生性别",]);
+                    //如果验证有错误$validator->fails() 验证错误 withErrors($validator)手动注册错误信息。 withInput();是数据保存 默认传递$resquest
+                    if($validator->fails()){ 
+                    return redirect()->back()->withErrors($validator)->withInput();}
+                    
+                    //验证通过后，取得数据传递给StudentModel保存
+                    $data=$request->input('student');
+                        if(StudentModel::create($data)){
+                    //如果保存成功返回列表页面，并且传递闪存数据 闪存数据用session获取
+                            return redirect('student')->with('seccess','录入成功！');
+                        }else{return redirect()->back();}
+                    //如果不是post请求则直接跳转到 提交页面
+                    }else{return view('student.create');} }
+
+//保存方法2
+                public function save(Request $request){
+                    $data=$request->input('student');
+                    $student= new StudentModel();
+                    $student->name=$data['name'];
+                    $student->age=$data['age'];
+                    $student->sex=$data['sex'];
+                    if($student->save()){
+                    return redirect("student");}else{return redirect()->back();}}
+
+                //模板中使用数据保存于验证
+                1模板中接收录入成功信息
+                @if (Session::has('seccess'))
+                {{Session::get('seccess')}}// 输出闪存信息
+                @endif
+                2.模板中接收失败信息
+                @if (Session::has('error')){{Session::get('error')}}@endif
+
+                3.提交验证失败后的数据保存
+                <input type="text" class="form-control" name="student[name]" 
+                value="{{old('student')['name']}}" id="name" placeholder="请输入学生姓名">
+
+                4.验证失败页面上显示失败信息
+                <p >{{$errors->first('student.name')}}</p>
+
+                5.验证失败调用页面显示所有错误信息
+                @if (count($errors))
+                @foreach($errors->all() as $error)
+                <li>{{$error}}</li>
+                @endforeach
+                @endif
+
+6.模型中实现常量
+                const SEX_UN ="10"; //未知
+                const SEX_BOY='20'; // 女
+                const SEX_GIRL='30'; //男
+                public function getsex($ind="null"){
+                $arr=[
+                self::SEX_UN=>'未知',
+                self::SEX_BOY=>'男',
+                self::SEX_GIRL=>'女',
+                ];
+                if ($ind1!=null){
+                return array_key_exists($ind,$arr)?$arr[$ind]:$arr[self::SEX_UN];}
+                return $arr;}
+
+模板中
+                @foreach($student->getsex() as $ind=>$val)
+                <label class="radio-inline">
+                <input type="radio" name="Student[sex]"
+                {{ isset($student->sex) && $student->sex == $ind ? 'checked' : '' }}
+                value="{{ $ind }}"> {{ $val }}
+                </label>
+                @endforeach
+
+7.通过表单实现修改 传递参数为 $student->id
+                <a href="{{url('student/update',['$id'=>$student->id])}}">修改</a>
+
+                Route::any('student/update/{id}','StudentController@update');
+
+
+                value="{{old('student')['name']?old('student')['name']:$student->name}}
+
+                //删除
+                public function delete($id)
+                {$student = StudentModel::find($id);
+                if ($student->delete()) {
+                return redirect('student')->with('seccess', '删除成功-' . $id);
+                } else {return redirect('student')->with('error', '删除失败-' . $id);}}
+
+                模板中
+                <a href="{{ url('student/delete', ['id' => $student->id]) }}"
+                onclick="if (confirm('确定要删除吗？') == false) return false;">删除</a>
+
+
+
+Composer
+                通用安装方式composer.phar   官网直接下载 
+                局部安装：composer.phar
+                全局安装：sudo mv composer.phar /usr/local/bin/composer
+
+                系统全局配置： 即将配置信息添加到 Composer 的全局配置文件 config.json 中。见“方法一”
+                单个项目配置： 将配置信息添加到某个项目的 composer.json 文件中。见“方法二”
+
+                方法一： 修改 composer 的全局配置文件（推荐方式）
+                打开命令行窗口（windows用户）或控制台（Linux、Mac 用户）并执行
+                composer config -g repo.packagist composer https://packagist.phpcomposer.com
+                方法二： 修改当前项目的 composer.json 配置文件：
+                打开命令行窗口（windows用户）或控制台（Linux、Mac 用户），进入你的项目的根目录（也就是 composer.json 文件所在目录），执行如下命令：
+                composer config repo.packagist composer https://packagist.phpcomposer.com
+                上述命令将会在当前项目中的 composer.json 文件的末尾自动添加镜像的配置信息（你也可以自己手工添加）：
+                "repositories": {
+                    "packagist": {
+                        "type": "composer",
+                        "url": "https://packagist.phpcomposer.com"
+                    }
+                }
+                以 laravel 项目的 composer.json 配置文件为例，执行上述命令后如下所示（注意最后几行）
+
+
+
+                使用composer
+                1.创建配置文件 php composer.phar init/composer init(全局)
+                2.Search命令: composer search monolog
+                3.Show  命令: composer show -all monolog/monolog
+                找到版本号 然后在配置文件中require中加入 “monilog/monolog”：‘1.21*’
+                4.Require命令: 直接输入 composer require库名  会自动写配置
+                5.Install命令:composer install //安装配置好的依赖
+                6.update命令: composer update //更新
+                Composer安装larvel
+                方法1 composer create -project laravel/laravel --目录名 
+                    php -r “file_exists(‘.env’)||copy(‘.env.example’,’.env’);” //复制.env
+                方法2 composer global require “laravel/installer” //安装安装器
+                    将～/.composer/vendar/bin添加到环境变量中
+                    vim ~/.bash_profile 然后写入
+                    export PATH=~/.composer/vendor/bin:$PATH
+                    Laravel  new  目录名 
+                问题1: 访问500 首先进去安装目录 执行php composer.phar install
+                主要原因是缺少vendor目录造成的
+
+                问题2：Laravel 出现"RuntimeException inEncrypter.php line 43
+                目录下执行 php artisan key:generate  生成的key值会自动写入.env中的APP_KEY后，如没有则需要手动添加
+
+
+
+                Artisan是laravel自带的命令行工具
+                php artisan list 或者 php artisan 查看artisan所有命令
+                php artisan make:controller StudentController //创建控制器
+                php artisan make:model StudentModel //创建模型
+                php artisan make:middleware Activity //创建中间件
+                                    Auth用户认证
+                php artisan auth //创建auth
+                php artisan migrate //连接数据库后 把database/migrations中数据迁移
+                                    新建数据迁移
+                方法1 新建xuesheng表的迁移文件
+                php artisan make:migration create_xuesheng_table --create=xuesheng
+                方法2 生成模型的同时生成迁移文件
+                php artisan make:model XueshengModel -m
+                然后编辑迁移文件up函数 
+                Schema::create('xuesheng', function (Blueprint $table) {
+                $table->increments('id');
+                $tabele->string('name');
+                $table->integer('age')->unsigned()->default(0); 
+                $table->timestamps();});
+
+数据填充
+                1.创建一个填充文件
+                php artisan db:seedr Student(表名)TableSeeder
+                2执行单个填充文件
+                php artisan db:seedr --class=StudentTableSeeder
+                3批量执行填充文件需要在DatabaseSeeder.php引入单个填充文件
+                php artisan db:seedr
+                                            Laravel中的常用功能
+                1.laravel中的文件上传
+                文件系统配置文件位于 config/filesystems.php
+                use Illuminate\Support\Facades\Storage;
+                公共磁盘
+                public 磁盘用于存储可以被公开访问的文件，默认情况下， public 磁盘使用 local 驱动并将文件存储在 storage/app/public ，要让这些文件可以通过web 访问到，需要创建一个软链 public/storage 指向 storage/app/public ，这种方式可以将公开访问的文件保存在一个可以很容易被不同部署环境共享的目录，在使用零停机时间部署系统如Envoyer 的时候尤其方便。
+                要创建这个软链，可以使用 Artisan 命令 storage:link ：
+                php artisan storage:link
+                文件被存储并且软链已经被创建的情况下，就可以使用辅助函数 asset 创建一个指向该文件的URL：
+                echo asset('storage/file.txt');
+
+
+                public function upload(Request $request){
+                if ($request->isMethod('POST')){
+                    $file=$request->file('uploadfile');
+                    if($file->isValid()){
+                        $originalName=$file->getClientOriginalName(); //获取原文件名
+                        $ext=$file->getClientOriginalExtension();//获取原文件扩展名
+                        $type=$file->getClientMimeType();//获取原文件名类型
+                        $realPath=$file->getRealPath();//获取原文件名临时绝对路径
+                        $filename=date('Y-m-d-H-i-s').'-'.uniqid().'.'.$ext;//新文件名
+                        //storage指定磁盘->put('文件名'）file_get_contents(临时路径)
+                $bool=Storage::disk('uploads')->put($filename,file_get_contents($realPath));
+                        var_dump($bool); }}}
+2.Laravel中的邮件发送 use Mail;
+                public function mail(){
+
+                Mail::raw('我是测试漂流小强', function ($message) {
+                $message->from('piaoliuxiaoqiang@163.com', '漂流小强');
+                $message->sender('john@johndoe.com', 'John Doe');
+                $message->to('409372438@qq.com');
+                $message->cc('john@johndoe.com', 'John Doe');
+                $message->bcc('john@johndoe.com', 'John Doe');
+                $message->replyTo('john@johndoe.com', 'John Doe');
+                $message->subject('邮件主题 测试');
+                $message->priority(3);
+                $message->attach('pathToFile');});
+                Mail::send('Html.view', $data, function ($message) {
+                $message->from('john@johndoe.com', 'John Doe');
+                $message->sender('john@johndoe.com', 'John Doe');
+                $message->to('john@johndoe.com', 'John Doe');
+                $message->cc('john@johndoe.com', 'John Doe');
+                    message->bcc('john@johndoe.com', 'John Doe');
+                $message->replyTo('john@johndoe.com', 'John Doe');
+                $message->subject('Subject');
+                $message->priority(3);
+                $message->attach('pathToFile');});
+
+
+
+3.Laravel中的缓存使用(配置设置在 config/cache.php)
+                use Illuminate\Support\Facades\Cache;
+                public function cache1(){
+                Cache::put('key1','value1',10); // 键，值，时间
+                Cache::add('key1','value1',10); //如果key1存在则添加失败，反之成功
+                Cache::put('key2','value2'); //永久缓存
+                if(Cache::has('key1')){ //判断是否存在
+                $val= Cache::get('key1');
+                var_dump($val);
+                }else{echo "key1不存在"}}
+                public function cache2(){
+                $val= Cache::get('key1');
+                $val= Cache::pull('key1'); //取出缓存后删除
+                $val= Cache::forget('key1'); //从缓存中删除缓存 返回boll值
+                var_dump($val);}
+4.Laravel中的错误与日志
+                Debug模式 配置在config/app.php中
+                http异常 abort('404') 
+                系统抛出自定义错误页面：abort('自定页面文件名')，在errors文件夹下面；
+                如果是路由没定义，则自动在errors下找到404页面代替
+                resources/views/errors/404.blade.php
+                日志：
+                single:   Log::info('可以是数组和字符串'),数组将按照json写入日志中
+                daily : 日志文件命名已日期命名
+
+5.Laravel中的队列应用
+                允许推迟耗时任务的执行从而提高web请求速度 配置config/queue.php中 
+                例使用数据库 驱动延时，首先修改.env中QUEUE_DRIVER=database
+
+
+                步骤1迁移队列需要的数据表
+                php artisan queue:table //首先创建迁移数据表
+                php artisan migrate     //执行迁移到数据表中
+                步骤2 编写任务类
+                php artisan make:job SendMail      //用命令创建发送邮件的工作类
+                然后更具需求编写任务类
+                步骤3 推送任务到队列
+                新建或在其他控制器类中
+                Public function queuq(){
+                    //控制器中new JOB类 不用引用 模型中使用需引用
+                dispatch（new SendMail（‘409372438@QQ.COM’））}//固定函数
+                建立路由，然后执行路由 就推送到任务队列中了
+                步骤4执行队列监听器
+                        php aitsan listen 
+                步骤5 生成错误信息表
+                    php artisan queue:failed-table  //创建失败表
+                    php artisan migrate            //执行迁移到数据表中
+                步骤6 处理失败任务
+                    php aritsan queue:failed //查看所有的失败表信息
+                    php artisan queue:retry 1 //执行ID为1的失败信息
+                    php artisan queue:retry all //执行所有错误记录
+                    php artisan queue:forget 4//删除ID为4的失败记录
+                    php artisan queue:flush  //删除所有失败记录
+
+
+
+Laravel实战简书
+                    控制和模板传递数据建议使用compact（）函数
+                例： return view(‘student’,[‘students’=>”$students”]);等价于
+                    return view(‘student’，compact(‘students’));
+                    同时如果有其他参数需要传递 如$posts
+                    return view(‘student’,compact(‘students’,’posts’))
+
+                Laravel对表单名字的建议
+                表明 students 即 名词+s 复数的形式
+                外键 student_id 即 表名去掉s下划线ID（一般ID为主键）
+                时间 created_at updated_at
+
+                    //put路由
+                Route::put('/', function () {return view('welcome');});
+                <from action=“/post” method=”POST”>
+                <input type=”hidden” name=”_method” value=”PUT” />
+                //{{method_field(‘PUT’)}} //隐藏才能命中PUT路由
+                </from>
+
+   
+
+ 

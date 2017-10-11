@@ -23,3 +23,12 @@ $factory->define(App\User::class, function (Faker $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Post::class, function (Faker $faker) {
+    //$faker = Faker\Factory::create('zh_CN');
+    $faker = Faker\Factory::create(‘zh_CN‘);
+    return [
+        'title' => $faker->sentence(6),
+        'content' => $faker->paragraph(10),
+    ];
+});

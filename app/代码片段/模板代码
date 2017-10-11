@@ -19,6 +19,7 @@ post请求需要验证csrf,所以要在表单里 加个隐藏域
    {{ isset($student->sex) && $student->sex == $ind ? 'checked' : ''  }} 
 
 6.分页
+  在控制器paginate（5）
  {{$students->render()}}
  {{$students->links()}}
 7.修改是的数据保存
@@ -54,3 +55,13 @@ post请求需要验证csrf,所以要在表单里 加个隐藏域
 @endif
 
 10验证提示
+
+11详情页非数据绑定
+    路由 Route::any('student/update/{id}','StudentController@update');
+    控制器    public function update($id){
+                $student=StudentModel::find($id);
+                return view('student.update',['student'=>$student]);
+            }
+    视图中链接      <a href="{{url('student/update',['$id'=>$student->id])}}">修改</a>
+            <a href="{{ url('student/delete', ['id' => $student->id]) }}"
+            onclick="if (confirm('确定要删除吗？') == false) return false;">删除</a>

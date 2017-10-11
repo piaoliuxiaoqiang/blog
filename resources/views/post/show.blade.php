@@ -1,5 +1,7 @@
 ﻿@extends('common.layous')
-
+@section('title')
+{{$post->title}}
+@stop
 @section('content')
     <div class="com-container">
         <div class="cms-g">
@@ -19,11 +21,11 @@
                     <span>公司新闻</span>
                 </div>
                 <div>
-                <p>日期：2017年9月12日 来源：<a href="#"><font color="blue">张三</font></a></p>
+                <p>日期:{{$post->created_at->toDateString()}} 来源：<a href="#"><font color="blue">{{$post->id}}</font></a></p>
                 </div>
 
                 <div class="com-nav-content">
-                    <span>大冶市云阿拉丁科技有限公司创建于2015年1月5日，总部位于青铜故里——大冶市。公司致力于帮助传统行业实现在互联网时代</span>
+                    <span>{{$post->content}}</span>
                 </div>
 
               <button class="btn btn-primary" type="button">

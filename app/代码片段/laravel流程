@@ -14,7 +14,13 @@ Laravel项目流程
 
 4.配置laravel 
     连接数据库、输出调试、修改时区 'timezone' => 'PRC'  'locale' => 'zh', (当地语言)
-    apache2开启重写、修改文件权限: storage vendor
+    apache2开启重写、/etc/apache2目录下有几个需要配置的文件和目录
+        sudo a2enmod rewrite
+        sudo vim /etc/apache2/sites-enabled/000-default  
+        将AllowOverride None 修改为 AllowOverride All，如果没有看到这项内容，可以修改apache2.conf配置文件
+        sudo vim /etc/apache2/apache2.conf
+        :%s/AllowOverride None/AllowOverride All //将其中的AllowOverride None 全部替换为 AllowOverride All
+    修改文件权限: storage vendor
 
 5.数据库设计（建模 和使用laravel migrations数据库迁移）
     public function up(){
@@ -61,10 +67,42 @@ Laravel项目流程
      
 11，数据填充 字符截断  分页
     数据填充  首先进入database/factories/UserFactory.php 创建一个针对某个模型的工厂类 创建填充数据的格式
-             然后进入php artisan thinker 中 factroy(App\Post::class,"条数")->create()
+             然后进入php artisan thinker 中 factory(App\Post::class,条数)->create()
+            
     字符截断  {{str_limit($post->content,"100","...")}}  //参数1 显示的内容 参数2 截取长度 参数三 超出显示的内容
     分页     首先在模型中取数据 $posts=Post::orderBy('created_at','desc')->get(); 把get 换成paginate（5）
             显示时候 用{{$posts->links()}}
+
+12,文章详情页采用的是 路由数据绑定
+       
+    //文章详情页面 绑定模型posts 
+    Route::get('/posts/{post}','PostController@show');
+    控制器  public function show(Post $post){
+                return view("post.show",compact('post')); }
+    视图中链接  {{url('posts')}}/{{$post->id}}
+
+    非绑定
+    路由 Route::any('student/update/{id}','StudentController@update');
+    控制器    public function update($id){
+                $student=StudentModel::find($id);
+                return view('student.update',['student'=>$student]);
+            }
+    视图中链接      <a href="{{url('student/update',['$id'=>$student->id])}}">修改</a>
+            <a href="{{ url('student/delete', ['id' => $student->id]) }}"
+            onclick="if (confirm('确定要删除吗？') == false) return false;">删除</a>
+
+13，富文本编辑器 表单提交
+    
+    尽量做到传递过来的参数名与数据库中的参数名 保持一致 这样语义一致 然后写代码和验证逻辑比较方便
+    
+    post请求需要验证csrf,所以要在表单里 加个隐藏域  
+    <input type="hidden" name="_token"   value="{{ csrf_token() }}"/>
+    不然就会报错：TokenMismatchException in VerifyCsrfToken.php line 68:  
+    或者{{csrf_field()}} 会生成一个隐藏的表单
+    
+    表单提交三步走---验证---逻辑---渲染模板
+    
+
 
 
 

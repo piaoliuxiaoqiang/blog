@@ -47,7 +47,7 @@ class StudentController extends Controller{
 
             //输出错误信息
             if($validator->fails()){ 
-                return redirect()->back()->withErrors($validator)->withInput();
+                return redirect()->back()->withErrors($validator)->withInput();//withInput()是为了数据保持用的
             }
             
             $data=$request->input('student');

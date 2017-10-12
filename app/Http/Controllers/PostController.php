@@ -27,9 +27,17 @@ class PostController extends Controller
         //validate类验证
         $validate=\Validator::make($request->input(), [
             'title'=>'required|min:2|max:80',
-            'content'=>'required',]);
-        
-
+            'content'=>'required',],
+            ['required'=>":attribute 必填",
+            'min'=>':attribute 不能小于2个字符',
+            'max'=>':attribute 不能大于80个字符',
+           ],
+           ['title'=>"标题",
+            'contect'=>"内容",
+           ]);
+           if($validator->fails()){ 
+            return redirect()->back()->withErrors($validator)->withInput();//withInput()是为了数据保持用的
+        };  
         $post=new Post();
         $post->title=$request->input('title');
         $post->content=$request->input('content');

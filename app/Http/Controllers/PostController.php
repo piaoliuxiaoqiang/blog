@@ -19,13 +19,15 @@ class PostController extends Controller
     //增加文章逻辑
     public function create(){
         return view("post.create");
+         
     }
+
 
     public function store(Request $request){
         // dd($request->all());
         
         //validate类验证
-        $validate=\Validator::make($request->input(), [
+        $validator=\Validator::make($request->input(), [
             'title'=>'required|min:2|max:80',
             'content'=>'required',],
             ['required'=>":attribute 必填",
@@ -33,7 +35,7 @@ class PostController extends Controller
             'max'=>':attribute 不能大于80个字符',
            ],
            ['title'=>"标题",
-            'contect'=>"内容",
+            'content'=>"内容",
            ]);
            if($validator->fails()){ 
             return redirect()->back()->withErrors($validator)->withInput();//withInput()是为了数据保持用的
@@ -59,5 +61,17 @@ class PostController extends Controller
     //删除文章逻辑
     public function delete(){
 
+    }
+
+    //图片上传
+    public function imageUpload(Request $request){
+         
+        // dd($request->all());
+
+
+        //文件保存路径 首先取出文件 然后保存到Public下 用md5(time())重命名
+        $path=$request->file('wangEditorH5File')->storePublicly(md5(time()));
+        //去storage目录下 取出 $path文件
+        return asset('storage/'.$path);
     }
 }

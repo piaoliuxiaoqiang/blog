@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="com-nav-content">
-                    <span>{{$post->content}}</span>
+                    <span>{!! $post->content !!}</span>
                 </div>
 
               <button class="btn btn-primary" type="button">

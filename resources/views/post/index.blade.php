@@ -2,6 +2,9 @@
 @section('title')
 111111111
 @stop
+
+
+
 @section('content')
  <div class="com-container">
         <div class="cms-g">
@@ -26,7 +29,7 @@
                     @foreach($posts as $post)
                         
                     <li><a href="{{url('posts')}}/{{$post->id}}"><span>{{$post->title}}</span><em>{{$post->created_at->toDateString()}}</em></a></li>
-                    <li>{{str_limit($post->content,"100","...")}}</li>
+                    <li>{!! str_limit($post->content,"100","...") !!}</li>
                     @endforeach
                     </ul>
                 </div>

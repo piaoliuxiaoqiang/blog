@@ -12,14 +12,15 @@
 <link rel='icon' href='favicon.ico' type='image/x-ico' />
 <meta name="description" content="" />
 <meta name="keywords" content="" />
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <link rel="stylesheet" href="{{asset('qianduan/css/default.min.css?t=227')}}" />
 <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
 <!--[if (gte IE 9)|!(IE)]><!-->
 <script type="text/javascript" src="{{asset('qianduan/lib/jquery/jquery.min.js')}}"></script>
 <!--<![endif]-->
 <!--[if lte IE 8 ]>
-<script src="{{asset('http://libs.baidu.com/jquery/1.11.3/jquery.min.js')}}"></script>
-<script src="{{asset('http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js')}}"></script>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
 <script src="{{asset('qianduan/lib/amazeui/amazeui.ie8polyfill.min.js')}}"></script>
 <![endif]-->
 <script type="text/javascript" src="{{asset('qianduan/lib/handlebars/handlebars.min.js')}}"></script>
@@ -30,8 +31,7 @@
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 @section('style')
 @show
-@section('script')
-@show
+
 </head>
 <body>
 <div class="row bg-primary">     
@@ -88,6 +88,8 @@
             <span style="color:#fff;"><a href="#" target="_blank" title="">主题</a>提供 - More Templates <a href="#" target="_blank" title="模板">模板</a> - Collect from <a href="#" title="网页" target="_blank">网页</a></span>
         </div>   </div>
 </footer>
+@section('script')
+@show
 </body>
 </html>
 

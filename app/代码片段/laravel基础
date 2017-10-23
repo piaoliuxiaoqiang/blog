@@ -660,7 +660,3 @@ Laravel实战简书
                 <input type=”hidden” name=”_method” value=”PUT” />
                 //{{method_field(‘PUT’)}} //隐藏才能命中PUT路由
                 </from>
-
-   
-
- 

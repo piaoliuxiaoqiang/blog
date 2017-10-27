@@ -21,7 +21,20 @@
                     <span>公司新闻</span>
                 </div>
                 <div>
-                <p>日期:{{$post->created_at->toDateString()}} 来源：<a href="#"><font color="blue">{{$post->id}}</font></a></p>
+                    <p>日期:{{$post->created_at->toDateString()}} 来源：
+                        <a href="#"><font color="blue">{{$post->id}}</font></a>
+                        <a href="#"><font color="blue">{{$post->id}}</font></a>
+                        <a href="#"><font color="blue">{{$post->id}}</font></a>
+                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                            <a href="#"><font color="blue">
+                            </font><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </a>
+                            <a href="{{url('posts')}}/{{$post->id}}/delete"><font color="blue">
+                            </font><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a>
+                            
+                        </button>
+                    </p>
                 </div>
 
                 <div class="com-nav-content">

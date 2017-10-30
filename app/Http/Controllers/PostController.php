@@ -51,12 +51,34 @@ class PostController extends Controller
 
     }
     //修改文章逻辑
-    public function edit(){
+    public function edit(Post $post){
 
+       return view('post.edit',compact('post'));
     }
     //更新文章逻辑
-    public function update(){
-
+    public function update(Post $post){
+        
+        $validator=\Validator::make($request->input(), [
+            'title'=>'required|min:2|max:80',
+            'content'=>'required',],
+            ['required'=>":attribute 必填",
+            'min'=>':attribute 不能小于2个字符',
+            'max'=>':attribute 不能大于80个字符',
+           ],
+           ['title'=>"标题",
+            'content'=>"内容",
+           ]);
+           if($validator->fails()){ 
+            return redirect()->back()->withErrors($validator)->withInput();//withInput()是为了数据保持用的
+        };  
+        $post=new Post();
+        $post->title=$request->input('title');
+        $post->content=$request->input('content');
+        if($post->save()){
+            return redirect("posts");
+        }else{
+            return redirect()->back();
+        };         
     }
     //删除文章逻辑
     public function delete(Post $post){

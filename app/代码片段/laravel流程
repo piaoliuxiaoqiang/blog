@@ -129,7 +129,12 @@ Laravel项目流程
     };
 
 15、文章编辑逻辑实现
-
+           //put路由
+                Route::put('/', function () {return view('welcome');});
+                <from action=“/post” method=”POST”>
+                    <input type=”hidden” name=”_method” value=”PUT” />
+                    //{{method_field(‘PUT’)}} //隐藏才能命中PUT路由
+                </from>
 
 
 16、删除文章操作

@@ -135,8 +135,6 @@ Laravel项目流程
                     <input type=”hidden” name=”_method” value=”PUT” />
                     //{{method_field(‘PUT’)}} //隐藏才能命中PUT路由
                 </from>
-
-
 16、删除文章操作
 
 

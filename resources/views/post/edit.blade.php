@@ -5,10 +5,10 @@
 @stop
 @section('content')
  </br>
-<form method="post" action="posts/{{posts->$id}}" class="form-group col-md-8 col-md-offset-2">    
+<form method="post" action="{{url('posts')}}/{{$post->id}}" class="form-group col-md-8 col-md-offset-2">    
 
     {{csrf_field()}}
-    {{method_field(‘PUT’)}}    
+    {{method_field('PUT')}}    
     <div class="form-group">
         <input type="text" class="form-control" id="idtitle" placeholder="输入标题" name="title" 
         value="{{old('title')?old('title'):$post->title}}">
@@ -29,7 +29,7 @@
       <div class="alert alert-dange" role="alert">
        <ul>
          @foreach($errors->all() as $error)
-         <li>{{$error}}</li>
+         <li>{{$error}}</li> 
          @endforeach
        </ul>
       

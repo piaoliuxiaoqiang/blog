@@ -38,7 +38,7 @@
         <div class="col-md-2 col-md-offset-9">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active" ><a href="{{url('login')}}">登录</a></li>
-                <li role="presentation" class="active"><a href="#">注册</a></li>
+                <li role="presentation" class="active"><a href="{{url('register')}}">注册</a></li>
             </ul>
         </div>
     </div>

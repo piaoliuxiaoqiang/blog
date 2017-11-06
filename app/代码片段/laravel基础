@@ -506,7 +506,7 @@ Composer
                 php artisan make:controller StudentController //创建控制器
                 php artisan make:model StudentModel //创建模型
                 php artisan make:middleware Activity //创建中间件
-                                    Auth用户认证
+Auth用户认证
                 php artisan auth //创建auth
                 php artisan migrate //连接数据库后 把database/migrations中数据迁移
                                     新建数据迁移

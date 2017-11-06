@@ -28,7 +28,15 @@ Route::put('/posts/{post}','PostController@update');
 Route::get('/posts/{post}/delete','PostController@delete');
 //图片上传
 Route::post('posts/image/upload','PostController@imageUpload');
+
+
 //登录
 Route::get('/login','LoginController@index');
+Route::post('/login','LoginController@login');
+
+//退出
+Route::get('/logout','LoginController@logout');
+
 //注册
 Route::get('/register','RgisterController@index');
+Route:post('/register','RgisterController@register');

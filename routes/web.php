@@ -39,4 +39,8 @@ Route::get('/logout','LoginController@logout');
 
 //注册
 Route::get('/register','RgisterController@index');
-Route:post('/register','RgisterController@register');
+Route::post('/register/zc','RgisterController@register');
+
+//个人设置页面
+Route::get('user/setting','UserController@setting');
+Route::post('user/setting','UserController@settingStore');

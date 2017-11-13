@@ -137,17 +137,32 @@ Laravel项目流程
                 </from>
 16、删除文章操作
 
-用户模块
-1、laravel验证唯一规则            unique:表名，字段名
-2、验证密码与确认密码是否一致的规则  
-    首先秘密传递过来的 name="password" 则确认密码必须为name="password_confirmed" 
-    例如，如果验证字段是 password，必须输入一个与之匹配的password_confirmation 字段。
-    则验证规则例： finish_date' => 'required|confirmed
-3、密码加密问题
-   传递过来的密码password 为明码传递 laravel为我们提供了加密方式 bcrypt()
-   $user->password=bcrypt($request->input('password'));
 
-auth门脸类 文章权限控制
+用户模块
+
+注册
+    1、laravel验证唯一规则            unique:表名，字段名
+    2、验证密码与确认密码是否一致的规则  
+        首先秘密传递过来的 name="password" 则确认密码必须为name="password_confirmed" 
+        例如，如果验证字段是 password，必须输入一个与之匹配的password_confirmation 字段。
+        则验证规则例： finish_date' => 'required|confirmed
+    3、密码加密问题
+    传递过来的密码password 为明码传递 laravel为我们提供了加密方式 bcrypt()
+    $user->password=bcrypt($request->input('password'));
+
+登录 auth门脸类
+    要使用Auth门脸类 必须相关数据模型继承 
+    use Illuminate\Foundation\Auth\User as Authenticatable;
+    class User extends Authenticatable{}
+    1、登录
+        if (Auth::attrmpt(['email'=>$email,'password'=>$password],$rwmember)){
+            //这个用户别记住了
+        }
+    2、登出 Auth::logout();
+    3、获取当前已通过认证的用户 $user=Auth::user();
+    4、获取当前已通过认证的用户ID $id=Auth::id();
+
+文章权限控制
 
 
 

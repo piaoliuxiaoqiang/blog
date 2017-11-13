@@ -59,7 +59,7 @@
 					</div>
 					 <div class="inputs-w3ls">
 						<i class="fa fa-key" aria-hidden="true"></i>
-						<input type="search" name="username" placeholder="确认密码" required=""/>
+						<input type="text" name="username" placeholder="确认密码" required=""/>
 					</div>
 					<input type="submit" value="Sign In">
 				</form>	

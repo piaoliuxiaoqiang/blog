@@ -24,7 +24,7 @@
                     <p>日期:{{$post->created_at->toDateString()}} 来源：
                         <a href="#"><font color="blue">{{$post->id}}</font></a>
                     
-                        <button type="button" class="btn btn-default" aria-label="Left Align">
+                        
                             <a href="{{url('posts')}}/{{$post->id}}/edit"><font color="blue">
                             </font><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a>
@@ -32,7 +32,7 @@
                             </font><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a>
                             
-                        </button>
+                       
                     </p>
                 </div>
 

@@ -29,16 +29,29 @@
 				<a href="#" class="hvr-shutter-out-vertical twitter"><i class="fa fa-twitter" aria-hidden="true"></i>
                 <span>使用QQ登录</span></a>
 				</div>
-				<form action="#" method="post">
+				 @if(count($errors))
+
+					<div class="alert alert-dange" role="alert">
+					<ul>
+						@foreach($errors->all() as $error)
+						<li>{{$error}}</li>
+						@endforeach
+					</ul>
+					
+					</div>
+				@endif
+				<form action="{{url("login")}}" method="post">
+				    {{csrf_field()}} 
 					<div class="inputs-w3ls">
 						<i class="fa fa-envelope" aria-hidden="true"></i>
-						<input type="email" name="Email" placeholder="Email" required=""/>
+						<input type="email" name="email" placeholder="邮箱" required=""/>
 					</div>
 					<div class="inputs-w3ls">
 						<i class="fa fa-key" aria-hidden="true"></i>
-						<input type="password" name="Password" placeholder="Password" required=""/>
+						<input type="password" name="password" placeholder="密码" required=""/>
 					</div>
-					<input type="submit" value="Sign In">
+					<input type='checkbox' value='1' name="is_remenber">记住我
+					<input type="submit" value="登 录">
 				</form>	
 			</div>
 			<!-- //login -->

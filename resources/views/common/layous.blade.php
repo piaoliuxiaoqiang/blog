@@ -35,11 +35,20 @@
 </head>
 <body>
 <div class="row bg-primary">     
-        <div class="col-md-2 col-md-offset-9">
+        <div class="col-md-6 col-md-offset-6">
             <ul class="nav nav-pills">
+                
                 <li role="presentation" class="active" ><a href="{{url('login')}}">登录</a></li>
                 <li role="presentation" class="active"><a href="{{url('register')}}">注册</a></li>
+                 <li role="presentation" class="active"><a href="#">张三</a></li>
+                <li role="presentation" class="active"><a href="#">我的主页</a></li>
+                <li role="presentation" class="active"><a href="#">个人设置</a></li>
+                <li role="presentation" class="active"><a href="#">登出</a></li>                  
             </ul>
+
+
+
+
         </div>
     </div>
   @section('header')

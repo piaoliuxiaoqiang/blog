@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+
 class PostController extends Controller
 {
     //列表逻辑
@@ -22,7 +23,7 @@ class PostController extends Controller
          
     }
 
-
+   //增加文章
     public function store(Request $request){
         // dd($request->all());
     
@@ -39,7 +40,9 @@ class PostController extends Controller
            if($validator->fails()){ 
             return redirect()->back()->withErrors($validator)->withInput();//withInput()是为了数据保持用的
         };  
+
         $post=new Post();
+        $post->user_id=\Auth::id();
         $post->title=$request->input('title');
         $post->content=$request->input('content');
         if($post->save()){

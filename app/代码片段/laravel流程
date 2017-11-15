@@ -66,8 +66,9 @@ Laravel项目流程
     $post->created_at->toDateString()
      
 11，数据填充 字符截断  分页
+     laravel 数据填充使用的是 https://github.com/fzaninotto/Faker 模块
     数据填充  首先进入database/factories/UserFactory.php 创建一个针对某个模型的工厂类 创建填充数据的格式
-             然后进入php artisan thinker 中 factory(App\Post::class,条数)->create()
+             然后进入php artisan tinker 中 factory(App\Post::class,条数)->create()
             
     字符截断  {{str_limit($post->content,"100","...")}}  //参数1 显示的内容 参数2 截取长度 参数三 超出显示的内容
     分页     首先在模型中取数据 $posts=Post::orderBy('created_at','desc')->get(); 把get 换成paginate（5）

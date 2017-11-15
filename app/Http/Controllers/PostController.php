@@ -41,6 +41,8 @@ class PostController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();//withInput()是为了数据保持用的
         };  
 
+        
+
         $post=new Post();
         $post->user_id=\Auth::id();
         $post->title=$request->input('title');
@@ -59,34 +61,35 @@ class PostController extends Controller
     }
     //更新文章逻辑
     public function update(Request $request,Post $post){
-        dd($request->all());
+       
         //验证
-        // $validator=\Validator::make($request->input(), [
-        //     'title'=>'required|min:2|max:80',
-        //     'content'=>'required',],
-        //     ['required'=>":attribute 必填",
-        //     'min'=>':attribute 不能小于2个字符',
-        //     'max'=>':attribute 不能大于80个字符',
-        //    ],
-        //    ['title'=>"标题",
-        //     'content'=>"内容",
-        //    ]);
-        //    if($validator->fails()){ 
-        //     return redirect()->back()->withErrors($validator)->withInput();//withInput()是为了数据保持用的
-        // };  
-        
-        // $post->title=$request->input('title');
-        // $post->content=$request->input('content');
-        // if($post->save()){
-        //     return redirect("posts");
-        // }else{
-        //     return redirect()->back();
-        // };         
+        $validator=\Validator::make($request->input(), [
+            'title'=>'required|min:2|max:80',
+            'content'=>'required',],
+            ['required'=>":attribute 必填",
+            'min'=>':attribute 不能小于2个字符',
+            'max'=>':attribute 不能大于80个字符',
+           ],
+           ['title'=>"标题",
+            'content'=>"内容",
+           ]);
+           if($validator->fails()){ 
+            return redirect()->back()->withErrors($validator)->withInput();//withInput()是为了数据保持用的
+        };  
+        $this->authorize('update',$post);
+        $post->title=$request->input('title');
+        $post->content=$request->input('content');
+        if($post->save()){
+            return redirect("posts");
+        }else{
+            return redirect()->back();
+        };         
     }
     //删除文章逻辑
     public function delete(Post $post){
 
      //TODO:用户权限认证
+     $this->authorize('delete',$post);
        $post->delete();
        return redirect("posts");
        //return 222;

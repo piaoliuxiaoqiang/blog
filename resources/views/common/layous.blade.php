@@ -35,15 +35,19 @@
 </head>
 <body>
 <div class="row bg-primary">     
-        <div class="col-md-6 col-md-offset-6">
+        <div class="col-md-4 col-md-offset-8">
             <ul class="nav nav-pills">
-                
+            @if(!\Auth::user())
                 <li role="presentation" class="active" ><a href="{{url('login')}}">登录</a></li>
                 <li role="presentation" class="active"><a href="{{url('register')}}">注册</a></li>
-                 <li role="presentation" class="active"><a href="#">张三</a></li>
+            @endif   
+           
+            @if(\Auth::user())
+                <li role="presentation" class="active"><a href="#">{{\Auth::user()->name}}</a></li>
                 <li role="presentation" class="active"><a href="#">我的主页</a></li>
                 <li role="presentation" class="active"><a href="#">个人设置</a></li>
-                <li role="presentation" class="active"><a href="#">登出</a></li>                  
+                <li role="presentation" class="active"><a href="{{url('/logout')}}">登出</a></li> 
+            @endif                 
             </ul>
 
 

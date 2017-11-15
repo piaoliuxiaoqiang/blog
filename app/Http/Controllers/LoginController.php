@@ -36,8 +36,8 @@ class LoginController extends Controller
         
     }
 
-    public function lagout(){
-        \Auth::logout;
+    public function logout(){
+        \Auth::logout();
         return redirect('login');
     }
 

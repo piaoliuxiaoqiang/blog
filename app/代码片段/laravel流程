@@ -27,7 +27,7 @@ Laravel项目流程
       Schema::create('users', function (Blueprint $table) {
       $table->increments('id');   //自增ID
       $table->string('name');     //字符创字段，string('name'，100) 第二个参数是长度限制
-      $table->string('email')->unique();
+      $table->string('email')->unique();  //唯一
       $table->text('content');    //text是没有长度的
       $table->string('password');
       $table->integer('age')->nullable();     //int 型 可空
@@ -138,6 +138,7 @@ Laravel项目流程
                 </from>
 16、删除文章操作
 
+第二部分
 
 用户模块
 
@@ -146,7 +147,7 @@ Laravel项目流程
     2、验证密码与确认密码是否一致的规则  
         首先秘密传递过来的 name="password" 则确认密码必须为name="password_confirmed" 
         例如，如果验证字段是 password，必须输入一个与之匹配的password_confirmation 字段。
-        则验证规则例： finish_date' => 'required|confirmed
+        则验证规则例： password' => 'required|confirmed
     3、密码加密问题
     传递过来的密码password 为明码传递 laravel为我们提供了加密方式 bcrypt()
     $user->password=bcrypt($request->input('password'));
@@ -163,7 +164,63 @@ Laravel项目流程
     3、获取当前已通过认证的用户 $user=Auth::user();
     4、获取当前已通过认证的用户ID $id=Auth::id();
 
+在文章中显示用户信息
+1、表关联 首先文章表关联用户表 用反向关联 在post模型中加入
+    //关联用户
+    public function user(){
+        return $this->belongsTo('App\User','user_id','id');
+        //参数为要关联的模型，外键（post表中的外键），主键
+    }
+2、模板中调用显示
+{{$post->user->email}} //显示用户关联user表中 邮箱信息
+
 文章权限控制
+1、定义策略类 php artisn make:policy PostPolicty (会在app\Http下生成Policies\PostPolicy.php文件)
+2、注册策略类、模型关联
+首先打开PostPolicty文件自定义权限策略条件 如
+use App\User;
+use APP\Post;
+//自定义更新权限
+ public function update(User $user,Post $post){
+        return $user->id==$post->user_id;}
+然后在/app/Providers/AuthServiceProvider.php 中关联模块 如下：
+  protected $policies = [
+        //'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Post' => 'App\Policies\PostPolicy', ];
+到此模块关联注册了权限
+3、策略判断 使用权限
+控制器中权限判断 $this->authorize('update',$post);
+或者 if ($user->can('update',$post)){}
+模板中 @can('update',$post)
+        //当前用户可更新
+     @elsecan('creat',$post)
+        //当前用户可新建
+    @endcan
+
+第三部分 评论模块
+表设计 ==> 模型建立 ==> 模型关联 ==> 页码搭建 ==> 路由设计 ==> 控制器业务建立 ==>业务逻辑
+ 
+1、表设计 使用migrations数据库迁移  
+php artisan make:migration create_posts(表名)_table  //创建migration表 并且设计表字段
+php artisan migrate //执行migration创建表字段
+
+2、模型建立与模型关联
+    public function user(){
+        return $this->belongsTo('App\User','user_id','id');
+        //参数为要关联的模型，外键（post表中的外键），主键}
+    
+    一对一     hasOne            (用户-手机号)
+    一对多     hasMany           (文章-评论)
+    一对多反向  belongsTo        (评论-文章)
+    多对多     belongsToMany     (用户-角色)
+    远程一对多  hasManyThrough   (国家-作者-文章)
+    多态关联    morphMany        (文章\视频-评论)
+    多态多对多  morphToMany      （文章\视频-标签）
+
+3、页面搭建与模型设计
+
+4、路由设计与业务逻辑
+
 
 
 

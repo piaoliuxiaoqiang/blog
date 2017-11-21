@@ -4,17 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
-
+use App\Comment;
 class PostController extends Controller
 {
     //列表逻辑
     public function index(){
 
-        $posts=Post::orderBy('created_at','desc')->paginate(10);
+        $posts=Post::orderBy('created_at','desc')->WithCount('comment')->paginate(10);
         return view("post.index",compact('posts'));
     }
     //文章详情逻辑
     public function show(Post $post){
+
+        $post->load('comment');//延迟预加载
         return view("post.show",compact('post'));
     }
     //增加文章逻辑
@@ -105,5 +107,26 @@ class PostController extends Controller
         $path=$request->file('wangEditorH5File')->storePublicly(md5(time()));
         //去storage目录下 取出 $path文件
         return asset('storage/'.$path);
+    }
+
+    //评论
+
+    public function comment(Post $post,Request $request){
+        //验证
+        $this->validate($request,['content'=>'required',],['required'=>":attribute 必填",],['content'=>"内容",]);
+        //规则
+        
+            //保存规则1 
+            $comment= new Comment();
+            $comment->content=$request->input('content');
+            $comment->user_id=\Auth::id();
+            $comment->post_id=$post->id;
+            //保存防方法2
+        //渲染
+        if ($comment->save()){
+            return redirect()->back();
+        }else{
+            return redirect('post');
+        }
     }
 }

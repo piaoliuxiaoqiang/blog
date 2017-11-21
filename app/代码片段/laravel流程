@@ -165,61 +165,79 @@ Laravel项目流程
     4、获取当前已通过认证的用户ID $id=Auth::id();
 
 在文章中显示用户信息
-1、表关联 首先文章表关联用户表 用反向关联 在post模型中加入
-    //关联用户
-    public function user(){
-        return $this->belongsTo('App\User','user_id','id');
-        //参数为要关联的模型，外键（post表中的外键），主键
-    }
-2、模板中调用显示
-{{$post->user->email}} //显示用户关联user表中 邮箱信息
+    1、表关联 首先文章表关联用户表 用反向关联 在post模型中加入
+        //关联用户
+        public function user(){
+            return $this->belongsTo('App\User','user_id','id');
+            //参数为要关联的模型，外键（post表中的外键），主键
+        }
+    2、模板中调用显示
+    {{$post->user->email}} //显示用户关联user表中 邮箱信息
 
 文章权限控制
-1、定义策略类 php artisn make:policy PostPolicty (会在app\Http下生成Policies\PostPolicy.php文件)
-2、注册策略类、模型关联
-首先打开PostPolicty文件自定义权限策略条件 如
-use App\User;
-use APP\Post;
-//自定义更新权限
- public function update(User $user,Post $post){
-        return $user->id==$post->user_id;}
-然后在/app/Providers/AuthServiceProvider.php 中关联模块 如下：
-  protected $policies = [
-        //'App\Model' => 'App\Policies\ModelPolicy',
-        'App\Post' => 'App\Policies\PostPolicy', ];
-到此模块关联注册了权限
+        1、定义策略类 php artisn make:policy PostPolicty (会在app\Http下生成Policies\PostPolicy.php文件)
+        2、注册策略类、模型关联
+        首先打开PostPolicty文件自定义权限策略条件 如
+        use App\User;
+        use APP\Post;
+        //自定义更新权限
+        public function update(User $user,Post $post){
+                return $user->id==$post->user_id;}
+        然后在/app/Providers/AuthServiceProvider.php 中关联模块 如下：
+        protected $policies = [
+                //'App\Model' => 'App\Policies\ModelPolicy',
+                'App\Post' => 'App\Policies\PostPolicy', ];
+        到此模块关联注册了权限
 3、策略判断 使用权限
-控制器中权限判断 $this->authorize('update',$post);
-或者 if ($user->can('update',$post)){}
-模板中 @can('update',$post)
-        //当前用户可更新
-     @elsecan('creat',$post)
-        //当前用户可新建
-    @endcan
+        控制器中权限判断 $this->authorize('update',$post);
+        或者 if ($user->can('update',$post)){}
+        模板中 @can('update',$post)
+                //当前用户可更新
+            @elsecan('creat',$post)
+                //当前用户可新建
+            @endcan
 
 第三部分 评论模块
 表设计 ==> 模型建立 ==> 模型关联 ==> 页码搭建 ==> 路由设计 ==> 控制器业务建立 ==>业务逻辑
  
-1、表设计 使用migrations数据库迁移  
-php artisan make:migration create_posts(表名)_table  //创建migration表 并且设计表字段
-php artisan migrate //执行migration创建表字段
+    1、表设计 使用migrations数据库迁移  
+    php artisan make:migration create_posts(表名)_table  //创建migration表 并且设计表字段
+    php artisan migrate //执行migration创建表字段
 
-2、模型建立与模型关联
-    public function user(){
-        return $this->belongsTo('App\User','user_id','id');
-        //参数为要关联的模型，外键（post表中的外键），主键}
-    
-    一对一     hasOne            (用户-手机号)
-    一对多     hasMany           (文章-评论)
-    一对多反向  belongsTo        (评论-文章)
-    多对多     belongsToMany     (用户-角色)
-    远程一对多  hasManyThrough   (国家-作者-文章)
-    多态关联    morphMany        (文章\视频-评论)
-    多态多对多  morphToMany      （文章\视频-标签）
+    2、模型建立与模型关联
+        public function user(){
+            return $this->belongsTo('App\User','user_id','id');
+            //参数为要关联的模型，外键（post表中的外键），主键}
+        
+        一对一     hasOne            (用户-手机号)
+        一对多     hasMany           (文章-评论)
+        一对多反向  belongsTo        (评论-文章)
+        多对多     belongsToMany     (用户-角色)
+        远程一对多  hasManyThrough   (国家-作者-文章)
+        多态关联    morphMany        (文章\视频-评论)
+        多态多对多  morphToMany      （文章\视频-标签）
 
-3、页面搭建与模型设计
+    3、页面搭建与模型设计
+    预加载 在控制器中
+        当通过属性访问 Eloquent 关联时，该关联数据会被「延迟加载」。意味着该关联数据只有在你使用属性访问它时才会被加载。
+        不过，Eloquent 可以在你查找上层模型时「预加载」关联数据。预加载避免了 N + 1 查找的问题。
+        要说明 N + 1 查找的问题， 例 评论（comment）关联 文章（post） 模型，的预加载
+        $post=App\Book::with('comment')-get();
+    延迟预加载 在控制器中
+        $post->load('comment'); 如果不预加载 下面代码则实际做了一次数据查询 不利于优化
+    模板中调用关联数据
+        @foreach($post->comment as $comment)
+            <h4 class="media-heading">{{$comment->user->name}}  <span>{{$comment->created_at}}</span></h4>
+            {{$comment->content}}
+         @endforeach
 
-4、路由设计与业务逻辑
+    关联数据计数
+        可以使用 withCount 方法 
+        例子 $posts=Post::orderBy('created_at','desc')->WithCount('comment')->paginate(10);
+        视图中 用 $post->comment_counts 来显示
+
+    写入关联模型
+    4、路由设计与业务逻辑
 
 
 

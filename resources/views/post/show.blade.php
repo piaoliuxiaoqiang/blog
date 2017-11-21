@@ -49,6 +49,9 @@
                 <div class="com-info-page">
                     <a href="#" class="no">上一篇</a><a href="#">下一篇</a>
                 </div>
+                
+            @foreach($post->comment as $comment)
+                
                 <ul class="media-list">
                     <li class="media">
                         <div class="media-left">
@@ -57,19 +60,35 @@
                         </a>
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading">王五</h4>
-                                这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里
-                                是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论内容这里是评论
-                                内容这里是评论内容这里是评论内容
+                            <h4 class="media-heading">{{$comment->user->name}}  <span>{{$comment->created_at}}</span></h4>
+                                {{$comment->content}}
                         </div>
                     </li>
                 </ul>
+
+            @endforeach
+
+                 
                
-                <form action="form_action.asp" method="get">
+                <form action="{{url($post->id)}}/comment" method="post">
                     <label>评论</label>
-                    <textarea class="form-control" rows="3"></textarea>
-                    <p></P>
+                    {{csrf_field()}}
+                    <textarea class="form-control" rows="3" name="content"></textarea>
+                    <p></p>
                      <button type="submit" class="btn btn-default pull-right">提交</button>
+
+                     @if(count($errors))
+
+                        <div class="alert alert-dange" role="alert">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                            <li>{{$error}}</li> 
+                            @endforeach
+                        </ul>
+                        
+                        </div>
+                    @endif
+
                 </form>
                 
                 

@@ -32,6 +32,7 @@
                         <span>{{$post->title}}</span></a>
                         <em>{{$post->user->name}}</em>
                         <em>{{$post->created_at->toDateString()}}</em></li>
+                        <em>评论：{{$post->comment_count}}</em></li>
                         <li>{!! str_limit($post->content,"100","...") !!}</li>
                     @endforeach
                     </ul>

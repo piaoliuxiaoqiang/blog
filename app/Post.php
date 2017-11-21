@@ -13,4 +13,9 @@ class Post extends Model
     public function user(){
         return $this->belongsTo('App\User','user_id','id');//参数为要关联的模型，外键（post表中的外键），主键
     }
+
+    //关联评论 一对多 
+    public function comment(){
+        return $this->hasMany('App\Comment')->orderby('created_at','desd');
+    }
 }

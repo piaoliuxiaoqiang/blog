@@ -33,3 +33,12 @@ $factory->define(App\Post::class, function (Faker $faker) {
         'user_id'=>$faker->numberBetween($min = 1, $max = 100),
     ];
 });
+
+$factory->define(App\Comment::class, function (Faker $faker) {
+
+    return [
+        'post_id' => $faker->numberBetween($min = 1, $max = 100),
+        'user_id' => $faker->numberBetween($min = 1, $max = 100),
+        'content'=>$faker->paragraph(10),
+    ];
+});

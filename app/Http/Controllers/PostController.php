@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Comment;
+use App\Zan;
 class PostController extends Controller
 {
     //列表逻辑
@@ -17,6 +18,7 @@ class PostController extends Controller
     public function show(Post $post){
 
         $post->load('comment');//延迟预加载
+        $post->WithCount('zans');
         return view("post.show",compact('post'));
     }
     //增加文章逻辑
@@ -91,8 +93,9 @@ class PostController extends Controller
     public function delete(Post $post){
 
      //TODO:用户权限认证
-     $this->authorize('delete',$post);
-       $post->delete();
+        $this->authorize('delete',$post);
+       
+        $post->delete();
        return redirect("posts");
        //return 222;
     }
@@ -129,4 +132,23 @@ class PostController extends Controller
             return redirect('post');
         }
     }
+   
+    //赞模块
+    public function zan(Post $post){
+        $param=[
+            'user_id'=>\Auth::id(),
+            'post_id'=>$post->id,
+        ];
+        //以属性查找用户若无则新增用户
+        Zan::firstOrCreate($param);
+        return back();
+    }
+   
+    //取消赞
+    public function unzan(Post $post){
+        //post模型调用关联zan模型 参数为\Auth::id()用户id 然后删除
+        $post->zan(\Auth::id())->delete();
+        return back();
+    }
+
 }

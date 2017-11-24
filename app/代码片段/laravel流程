@@ -198,7 +198,7 @@ Laravel项目流程
             @endcan
 
 第三部分 评论模块
-表设计 ==> 模型建立 ==> 模型关联 ==> 页码搭建 ==> 路由设计 ==> 控制器业务建立 ==>业务逻辑
+表设计 ==> 模型建立 ==> 模型关联 ==> 页面搭建 ==> 路由设计 ==> 控制器业务建立 ==>业务逻辑
  
     1、表设计 使用migrations数据库迁移  
     php artisan make:migration create_posts(表名)_table  //创建migration表 并且设计表字段
@@ -236,8 +236,9 @@ Laravel项目流程
         例子 $posts=Post::orderBy('created_at','desc')->WithCount('comment')->paginate(10);
         视图中 用 $post->comment_counts 来显示
 
-    写入关联模型
-    4、路由设计与业务逻辑
+点赞模块
+
+       
 
 
 

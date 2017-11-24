@@ -42,10 +42,15 @@
                 <div class="com-nav-content">
                     <span>{!! $post->content !!}</span>
                 </div>
-
-              <button class="btn btn-primary" type="button">
-                赞 <span class="badge">5</span>
-              </button>
+             @if ($post->zan(\Auth::id())->exists())
+             
+                <a href="{{url($post->id)}}/unzan" class="btn btn-primary" >取消赞</a> <span class="badge">{{$post->zans_counts}}</span>
+             
+              @else
+              
+                <a href="{{url($post->id)}}/zan" class="btn btn-primary">赞 </a> <span class="badge">5</span>
+              
+              @endif
                 <div class="com-info-page">
                     <a href="#" class="no">上一篇</a><a href="#">下一篇</a>
                 </div>

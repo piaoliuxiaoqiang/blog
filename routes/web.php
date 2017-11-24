@@ -46,3 +46,6 @@ Route::get('user/setting','UserController@setting');
 Route::post('user/setting','UserController@settingStore');
 //评论
 Route::post('/{post}/comment','PostController@comment');
+//赞
+Route::get('/{post}/zan','PostController@zan');
+Route::get('/{post}/unzan','PostController@unzan');

@@ -64,14 +64,14 @@
 
 
 数据库操作 连接数据库 在config/database.php 中设置 在.env中修改
-        1DB Facade
+    1、DB Facade
         DB facade  Use Illuminate\Support\Facades\DB;
         DB：：insert(‘insert into student(name,age) values(?,?),[.xiao‘’,18]’);
         DB：：update(sql语句);
         DB：：select()
         DB：：delete()
 
-        2.查询构造器   Use Illuminate\Support\Facades\DB;
+    2.查询构造器   Use Illuminate\Support\Facades\DB;
         增
         DB::table('student')->insert(['name' => 'wwww','age' => 18]);
         //得到自增ID
@@ -132,7 +132,8 @@ Eloquent ORM 每个表都有一个与之相对应的模型
             同理其他构造器函数也能用。
 
 //orm新增，自定义时间戳，以及批量赋值
-            1.控制器中使用模型新增数据 调用save（）自动维护update_at 与created_at字段，如需关闭自动维护 请在模型中处理（如上）
+            1.控制器中使用模型新增数据 调用save（）自动维护update_at 与created_at字段，如需关闭自动维护 
+            请在模型中处理（如上）
             $student=new Student();
             $student->name="xiaoqiang";
             $student->age=18;

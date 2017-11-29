@@ -27,4 +27,5 @@ class Post extends Model
     public function zans(){
         return $this->hasMany('App\Zan');
     }
+
 }

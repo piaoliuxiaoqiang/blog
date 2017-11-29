@@ -11,15 +11,23 @@ class PostController extends Controller
     //列表逻辑
     public function index(){
 
-        $posts=Post::orderBy('created_at','desc')->WithCount('comment')->paginate(10);
+        $posts=Post::orderBy('created_at','desc')->withCount(['comment','zans'])->paginate(10);
         return view("post.index",compact('posts'));
     }
+    
+    
+    
     //文章详情逻辑
+   
+   
+   
     public function show(Post $post){
 
         $post->load('comment');//延迟预加载
-        $post->WithCount('zans');
-        return view("post.show",compact('post'));
+        $a = Post::where('id',$post->id)->withCount(['comment','zans'])->first();
+        // $cout =$post->withCount('zans');
+        //dd($a);
+        return view("post.show",compact('post','a'));
     }
     //增加文章逻辑
     public function create(){

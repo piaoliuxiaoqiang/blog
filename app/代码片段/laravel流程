@@ -38,6 +38,9 @@ Laravel项目流程
   );}
 
 6.建立git仓库同步到github上
+      git status 查看本地修改状态
+      git add .　提交本地修改　git commit -m "内容"　提交修改内容
+　　　git status  再次查看是否有修改
       git remote add origin https://github.com/piaoliuxiaoqiang/blog.git  本地https关联
       git push -u origin master  推送本地分支到远程
       git push origin master 然后只要本地提交了 就可以直接使用了

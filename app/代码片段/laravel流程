@@ -55,6 +55,11 @@ Laravel项目流程
 
 9.单个模块开发--功能开发
      创建模块路由，创建控制器，创建模型文件 
+      php artisan list 或者 php artisan 查看artisan所有命令
+    　php artisan make:controller StudentController //创建控制器
+    　php artisan make:model StudentModel //创建模型
+    　php artisan make:middleware Activity //创建中间件
+    
     控制和模板传递数据建议使用compact（）函数
     例： return view(‘student’,[‘students’=>”$students”]);等价于
      return view(‘student’，compact(‘students’));
